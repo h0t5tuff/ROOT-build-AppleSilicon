@@ -67,18 +67,19 @@ EXAMPLE:
   make clean; make
   cd ../compiled && make clean; make
 # create data dirs:
-  (data dirs on mac, in compiled)
+  (on mac, in compiled)
   mkdir caenData
   mkdir rootData   
-  #(data dirs on linux in compiled and in bacon2Data)
-  ln -s /mnt/Data2/BaconRun4Data/rootData/ rootData
-  ln -s /mnt/Data2/BaconRun4Data/caenDataTensor/ caenData
+  #(on linux in compiled and in bacon2Data)
+  ln -s /mnt/Data2/BaconRun5Data/rootData/ rootData
+  ln -s /mnt/Data2/BaconRun4Data/caenData/ caenData
+  ln -s /home/gold/bacon2Data/compiled/ compiledGold
 # Run Excutables:
   (on mac)
   cd compiled
   btbSim <events number>  // then copy root file to /rootData
   anacg <root file from btbSim>   // product root file lives in /caenData
-  postAna <tag> <tag>  // first change summary root file name in gain.C ln288
+  postAna <etag> <etag> <max entries>  // first change put a summary or post root file in /compiled, then summary or post root file name in gain.C & gainSum.C ln288
   (on linux)
   cd bacon2Data
   nohup ./anacDir.py 00_00_0000 >& anacDir00_00_0000.log &
