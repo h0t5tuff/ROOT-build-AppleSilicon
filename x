@@ -1,6 +1,6 @@
-(this was my method before homebrew created a native arm64 bottle for root late 2025)
-DEPENDENCIES:
-amd64 architicture: I found that putting <arch -x86_64 > before the official homebrew install command gets the job done ;)
+-------------this_was_my_method_before_homebrew_created_a_native_arm64_bottle_for_root_late2025------------
+-----------DEPENDENCIES-----------
+ ## amd64 architecture: I found that putting <arch -x86_64 > before the official homebrew install command gets the job done ;)
 echo "base tools"
 brew install python wget git make xerces-c
 echo "Build utilities"
@@ -14,8 +14,7 @@ brew install cfitsio davix fftw freetype ftgl gcc giflib gl2ps glew \
              nlohmann-json numpy openblas openssl pcre pcre2 python sqlite \
              tbb xrootd xxhash xz zstd
 brew update && brew upgrade && brew autoremove && brew cleanup && brew doctor
-——————————————
-BUILD:
+————————BUILD—————------
 mkdir ROOT && cd ROOT
 git clone https://github.com/root-project/root.git
 cd root
@@ -35,11 +34,10 @@ env CFLAGS="-I/usr/local/include" \
 grep ZSTD CMakeCache.txt || echo "zstd not detected properly."
 arch -x86_64 make -j$(sysctl -n hw.logicalcpu)
 arch -x86_64 make install
-——————————————
-.zshrc:
-# HOMEBREW
+————————.zshrc——————---
+#HOMEBREW
 eval "\$(/usr/local/bin/brew shellenv)"  
-# ROOT:
+#ROOT:
 export ROOTSYS=$ROOT_INSTALL
 export PATH="\$ROOTSYS/bin:\$PATH"
 export LD_LIBRARY_PATH="\$ROOTSYS/lib:\$LD_LIBRARY_PATH"
@@ -47,33 +45,37 @@ export DYLD_LIBRARY_PATH="\$ROOTSYS/lib:\$DYLD_LIBRARY_PATH"
 export CMAKE_PREFIX_PATH="\$ROOTSYS:\$CMAKE_PREFIX_PATH"
 export CPATH="\$ROOTSYS/include:\$CPATH"
 export DISPLAY=:0
-——————————————
-EXAMPLE:
-# Build [Bacon2Data](https://github.com/liebercanis/bacon2Data/tree/runTwo):
+
+———————EXAMPLE———————————————
+#Build [Bacon2Data](https://github.com/liebercanis/bacon2Data/tree/runTwo):
   git clone --branch runTwo https://github.com/liebercanis/bacon2Data.git
   cd bacon2Data && git pull
   //git fetch origin && git reset --hard origin/runTwo && git clean -fdx 
-# create symlink:
+#create symlink:
   cd bobj
   (symlink on mac) 
   ln -s /opt/homebrew/opt/root/etc/root/Makefile.arch .     
   (symlink on linux)
   ln -s /snap/root-framework/current/usr/local/etc/Makefile.arch .     
-# hard code path if you're not cloning in your home dir:
+#hard code path if you're not cloning in your home dir:
   cd bobj 
   nano makefile
     INSTALLNAME  :=  $(HOME)/ROOT/bacon2Data/bobj/$(LIBRARY) 
-# build:
+#build:
   make clean; make
   cd ../compiled && make clean; make
-# create data dirs:
-  (on mac, in compiled)
+#create data dirs and put btbSim and anacg files there:
+  #(on mac in compiled)
   mkdir caenData
   mkdir rootData   
   #(on linux in compiled and in bacon2Data)
   ln -s /mnt/Data2/BaconRun5Data/rootData/ rootData
   ln -s /mnt/Data2/BaconRun4Data/caenData/ caenData
-  ln -s /home/gold/bacon2Data/compiled/ compiledGold
+  ln -s /home/gold/bacon2Data/compiled/ compiledGold 
+  ln -s /home/gold/bacon2Data/bobj/ bobjGold 
+# put gains files in bobj then symlink 'em in place to be used by postAna:
+  ln -s <gainPeak root file> gainPeakCurrent.root
+  ln -s <gainSum root file> gainSumCurrent.root
 # Run Excutables:
   (on mac)
   cd compiled
@@ -84,8 +86,7 @@ EXAMPLE:
   cd bacon2Data
   nohup ./anacDir.py 00_00_0000 >& anacDir00_00_0000.log &
   top   
------------------------------
-BACONMONITOR:
+--------------BACONMONITOR---------------
 On mac:
   xhost +SI:localuser:root 
 On daq (via ssh):
