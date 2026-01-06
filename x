@@ -49,40 +49,45 @@ export CPATH="\$ROOTSYS/include:\$CPATH"
 export DISPLAY=:0
 ——————————————
 EXAMPLE:
-# Build [Bacon2Data](https://github.com/liebercanis/bacon2Data/tree/runTwo)
-git clone --branch runTwo https://github.com/liebercanis/bacon2Data.git
-cd bacon2Data && git pull
-# git fetch origin && git reset --hard origin/runTwo && git clean -fdx 
-cd bobj
-(symlink on mac) 
-ln -s /opt/homebrew/opt/root/etc/root/Makefile.arch .     
-(symlink on linux)
-ln -s /snap/root-framework/current/usr/local/etc/Makefile.arch .     
-make clean; make
-cd ../compiled && make clean; make
-(data dirs on mac, in compiled)
-mkdir caenData
-mkdir rootData   
-#(data dirs on linux in compiled and in bacon2Data)
-ln -s /mnt/Data2/BaconRun4Data/rootData/ rootData
-ln -s /mnt/Data2/BaconRun4Data/caenDataTensor/ caenData
-# Run Excutables
-(on mac)
-cd compiled
-btbSim <event number>
-cp <btbSimq0000-00-00-00-00-1000000.root> rootData/
-anacg <btbSimq0000-00-00-00-00-1000000.root>
-postAna (in gain.C change summary name ln288)
-(on linux)
-cd bacon2Data
-nohup ./anacDir.py 00_00_0000 >& anacDir00_00_0000.log &
-top     
-postAna (in gain.C change summary name ln288)
+# Build [Bacon2Data](https://github.com/liebercanis/bacon2Data/tree/runTwo):
+  git clone --branch runTwo https://github.com/liebercanis/bacon2Data.git
+  cd bacon2Data && git pull
+  //git fetch origin && git reset --hard origin/runTwo && git clean -fdx 
+# create symlink:
+  cd bobj
+  (symlink on mac) 
+  ln -s /opt/homebrew/opt/root/etc/root/Makefile.arch .     
+  (symlink on linux)
+  ln -s /snap/root-framework/current/usr/local/etc/Makefile.arch .     
+# hard code path if you're not cloning in your home dir:
+  cd bobj 
+  nano makefile
+    INSTALLNAME  :=  $(HOME)/ROOT/bacon2Data/bobj/$(LIBRARY) 
+# build:
+  make clean; make
+  cd ../compiled && make clean; make
+# create data dirs:
+  (data dirs on mac, in compiled)
+  mkdir caenData
+  mkdir rootData   
+  #(data dirs on linux in compiled and in bacon2Data)
+  ln -s /mnt/Data2/BaconRun4Data/rootData/ rootData
+  ln -s /mnt/Data2/BaconRun4Data/caenDataTensor/ caenData
+# Run Excutables:
+  (on mac)
+  cd compiled
+  btbSim <events number>  // then copy root file to /rootData
+  anacg <root file from btbSim>   // product root file lives in /caenData
+  postAna <tag> <tag>  // first change summary root file name in gain.C ln288
+  (on linux)
+  cd bacon2Data
+  nohup ./anacDir.py 00_00_0000 >& anacDir00_00_0000.log &
+  top   
 -----------------------------
 BACONMONITOR:
 On mac:
- xhost +SI:localuser:root 
+  xhost +SI:localuser:root 
 On daq (via ssh):
-ln -s /home/bacon/BaconMonitor/BaconMonitor2_tensor.py /home/Tensor/BaconMonitor2_tensor.py
-sudo visudo
+  ln -s /home/bacon/BaconMonitor/BaconMonitor2_tensor.py /home/Tensor/BaconMonitor2_tensor.py
+  sudo visudo
 	Tensor ALL=(ALL) NOPASSWD: SETENV: /usr/bin/python3 /home/Tensor/BaconMonitor2_tensor.py
