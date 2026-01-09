@@ -1,5 +1,5 @@
 -------------this_was_my_method_before_homebrew_created_a_native_arm64_bottle_for_root_late2025------------
------------DEPENDENCIES-----------
+#DEPENDENCIES
  ## amd64 architecture: I found that putting <arch -x86_64 > before the official homebrew install command gets the job done ;)
 echo "base tools"
 brew install python wget git make xerces-c
@@ -14,7 +14,7 @@ brew install cfitsio davix fftw freetype ftgl gcc giflib gl2ps glew \
              nlohmann-json numpy openblas openssl pcre pcre2 python sqlite \
              tbb xrootd xxhash xz zstd
 brew update && brew upgrade && brew autoremove && brew cleanup && brew doctor
-————————BUILD—————------
+# BUILD:
 mkdir ROOT && cd ROOT
 git clone https://github.com/root-project/root.git
 cd root
@@ -34,17 +34,6 @@ env CFLAGS="-I/usr/local/include" \
 grep ZSTD CMakeCache.txt || echo "zstd not detected properly."
 arch -x86_64 make -j$(sysctl -n hw.logicalcpu)
 arch -x86_64 make install
-————————.zshrc——————---
-#HOMEBREW
-eval "\$(/usr/local/bin/brew shellenv)"  
-#ROOT:
-export ROOTSYS=$ROOT_INSTALL
-export PATH="\$ROOTSYS/bin:\$PATH"
-export LD_LIBRARY_PATH="\$ROOTSYS/lib:\$LD_LIBRARY_PATH"
-export DYLD_LIBRARY_PATH="\$ROOTSYS/lib:\$DYLD_LIBRARY_PATH"
-export CMAKE_PREFIX_PATH="\$ROOTSYS:\$CMAKE_PREFIX_PATH"
-export CPATH="\$ROOTSYS/include:\$CPATH"
-export DISPLAY=:0
 
 ———————EXAMPLE———————————————
 #Build [Bacon2Data](https://github.com/liebercanis/bacon2Data/tree/runTwo):
